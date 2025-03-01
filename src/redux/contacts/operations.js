@@ -1,20 +1,23 @@
-import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { goitApi } from "../auth/operations";
 
 // всі запити axios тепер автоматично починаються з цього URL.
-axios.defaults.baseURL = "https://67bb2601fbe0387ca13939cb.mockapi.io";
+// axios.defaults.baseURL = "https://connections-api.goit.global/";
+
+const setAuthHeader = (token) => {
+  goitApi.defaults.headers.common.Authorization = `Bearer ${token}`;
+};
 
 //createAsyncThunk допомогає виконувати HTTP-запит
 export const fetchContacts = createAsyncThunk(
   "contacts/fetchContacts",
-  //(thunkAPI) Використовуємо символ підкреслення як ім'я першого параметра, тому що в цій операції він нам не потрібен
-  //(thunkAPI)   Цей об'єкт дає тобі доступ до додаткових можливостей Redux Toolkit
   async (_, thunkAPI) => {
     try {
-      const { data } = await axios.get("/contacts");
+      const { data } = await goitApi.get("/contacts");
+      setAuthHeader(data.token);
       return data;
     } catch (error) {
-      // При помилці запиту повертаємо проміс який буде відхилений з текстом помилки
+      // При помилці запиту повертаємо проміс, який буде відхилений з текстом помилки
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -24,7 +27,8 @@ export const addContact = createAsyncThunk(
   "contacts/addContact",
   async (newContact, thunkAPI) => {
     try {
-      const { data } = await axios.post("/contacts", newContact);
+      const { data } = await goitApi.post("/contacts", newContact);
+      setAuthHeader(data.token);
       return data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message);
@@ -36,7 +40,8 @@ export const deleteContact = createAsyncThunk(
   "contacts/deleteContact",
   async (taskId, thunkAPI) => {
     try {
-      await axios.delete(`/contacts/${taskId}`);
+      await goitApi.delete(`/contacts/${taskId}`);
+      setAuthHeader(taskId.token);
       return taskId;
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message);

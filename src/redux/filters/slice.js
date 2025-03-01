@@ -19,6 +19,3 @@ const filterSlice = createSlice({
 
 export const filterReducer = filterSlice.reducer;
 export const { changeFilter } = filterSlice.actions;
-
-// Отримати значення фільтра
-export const selectNameFilter = (state) => state.filter.filters.name;

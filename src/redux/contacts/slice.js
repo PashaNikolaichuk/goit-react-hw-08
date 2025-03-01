@@ -1,5 +1,5 @@
-import { createSelector, createSlice, isAnyOf } from "@reduxjs/toolkit";
-import { fetchContacts, addContact, deleteContact } from "./contactsOps";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
+import { fetchContacts, addContact, deleteContact } from "./operations";
 
 // 1. Оголошуєм початкове значення стану Redux
 const initialState = {
@@ -72,18 +72,3 @@ const contactsSlices = createSlice({
 export const tasksReducer = contactsSlices.reducer;
 export const { setLoading, setError, fetchDataSuccess } =
   contactsSlices.actions;
-
-// Витягуємо список контактів
-export const selectContacts = (state) => state.contacts.tasks.item;
-export const selectLoading = (state) => state.contacts.tasks.isLoading;
-export const selectError = (state) => state.contacts.tasks.error;
-export const selectFilter = (state) => state.filters.filters.name;
-
-export const selectFilteredContacts = createSelector(
-  [selectContacts, selectFilter],
-  (contacts = [], filter = "") => {
-    return contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
-  }
-);

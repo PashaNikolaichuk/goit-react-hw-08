@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import s from "./ContactForm.module.css";
 import { useDispatch } from "react-redux";
-import { addContact } from "../../redux/contactsOps";
+import { addContact } from "../../redux/contacts/operations";
 
 const ContactForm = () => {
   // ми повідомляємо Redux, що треба виконати певну дію, і ця дія змінить стан у store.
@@ -39,12 +39,12 @@ const ContactForm = () => {
       <Form className={s.form}>
         <label className={s.labelForm}>
           <span>Name:</span>
-          <Field type="text" name="name" />
+          <Field type="text" name="name" className={s.inputForm} />
           <ErrorMessage name="name" component="div" style={{ color: "red" }} />
         </label>
         <label className={s.labelForm}>
           <span>Number:</span>
-          <Field type="text" name="number" />
+          <Field type="text" name="number" className={s.inputForm} />
           <ErrorMessage
             name="number"
             component="div"
