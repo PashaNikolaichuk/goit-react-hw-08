@@ -4,17 +4,13 @@ import { goitApi } from "../auth/operations";
 // всі запити axios тепер автоматично починаються з цього URL.
 // axios.defaults.baseURL = "https://connections-api.goit.global/";
 
-const setAuthHeader = (token) => {
-  goitApi.defaults.headers.common.Authorization = `Bearer ${token}`;
-};
-
 //createAsyncThunk допомогає виконувати HTTP-запит
 export const fetchContacts = createAsyncThunk(
   "contacts/fetchContacts",
   async (_, thunkAPI) => {
     try {
       const { data } = await goitApi.get("/contacts");
-      setAuthHeader(data.token);
+
       return data;
     } catch (error) {
       // При помилці запиту повертаємо проміс, який буде відхилений з текстом помилки
@@ -28,7 +24,7 @@ export const addContact = createAsyncThunk(
   async (newContact, thunkAPI) => {
     try {
       const { data } = await goitApi.post("/contacts", newContact);
-      setAuthHeader(data.token);
+
       return data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message);
@@ -41,7 +37,7 @@ export const deleteContact = createAsyncThunk(
   async (taskId, thunkAPI) => {
     try {
       await goitApi.delete(`/contacts/${taskId}`);
-      setAuthHeader(taskId.token);
+
       return taskId;
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message);
