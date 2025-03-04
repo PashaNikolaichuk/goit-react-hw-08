@@ -13,7 +13,8 @@ const AppBar = () => {
   return (
     <header className={s.header}>
       <Navigation />
-      {isLoggedIn && <p>Welcome, {user.name}</p>}
+      {/* {isLoggedIn && <p>Welcome, {user.name}</p>} */}
+      {isLoggedIn && <p>Welcome, {user?.name ?? "Guest"}</p>}
       {isLoggedIn ? <UserMenu /> : <AuthNav />}
     </header>
   );

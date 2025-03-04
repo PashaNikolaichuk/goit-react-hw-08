@@ -6,9 +6,20 @@ import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import ContactsPage from "./pages/ContactsPage";
 import Layout from "./components/Layout/Layout";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { refreshUserThunk } from "./redux/auth/operations";
+import { selectIsRefreshing } from "./redux/auth/selectors";
 
 const App = () => {
-  return (
+  const dispatch = useDispatch();
+  const isRefreshing = useSelector(selectIsRefreshing);
+
+  useEffect(() => {
+    dispatch(refreshUserThunk());
+  }, [dispatch]);
+  // якщо true повертає null як false сторінки
+  return isRefreshing ? null : (
     <div className={s.container}>
       <Routes>
         <Route path="/" element={<Layout />}>

@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerThunk, loginThunk, logOutThunk } from "./operations";
+import {
+  registerThunk,
+  loginThunk,
+  logOutThunk,
+  refreshUserThunk,
+} from "./operations";
 
 const initialState = {
   user: {
@@ -7,18 +12,15 @@ const initialState = {
     email: null,
   },
   token: null,
+  //  вказує, чи користувач авторизований.
   isLoggedIn: false,
+  // вказує, чи триває процес відновлення авторизації.
   isRefreshing: false,
 };
 
 const authSlices = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    // logout: (state) => {
-    //   return initialState;
-    // },
-  },
   extraReducers: (builder) => {
     builder
       .addCase(registerThunk.fulfilled, (state, action) => {
@@ -33,6 +35,18 @@ const authSlices = createSlice({
       })
       .addCase(logOutThunk.fulfilled, () => {
         return initialState;
+      })
+      .addCase(refreshUserThunk.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.email = action.payload.email;
+        state.isLoggedIn = true;
+        state.isRefreshing = false;
+      })
+      .addCase(refreshUserThunk.pending, (state) => {
+        state.isRefreshing = true;
+      })
+      .addCase(refreshUserThunk.rejected, (state) => {
+        state.isRefreshing = false;
       });
   },
 });

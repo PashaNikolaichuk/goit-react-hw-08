@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const goitApi = axios.create({
   baseURL: "https://connections-api.goit.global/",
@@ -21,12 +22,13 @@ export const registerThunk = createAsyncThunk(
       const { data } = await goitApi.post("/users/signup", credentials);
       setAuthHeader(data.token);
       return data;
-    } catch (e) {
-      if (e.response?.data?.code === 11000) {
-        return thunkAPI.rejectWithValue("Цей email вже використовується.");
+    } catch (error) {
+      if (error.response.data.code === 11000) {
+        toast.error("user alredy exist!");
+        thunkAPI.rejectWithValue(error.message);
       }
 
-      return thunkAPI.rejectWithValue(e.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
@@ -56,4 +58,23 @@ export const logOutThunk = createAsyncThunk(
   }
 );
 
-// petro;
+// потрібна для автоматичного відновлення стану авторизованого користувача при перезавантаженні сторінки.
+
+export const refreshUserThunk = createAsyncThunk(
+  "auth/refresh",
+  async (_, thunkAPI) => {
+    const savedToken = thunkAPI.getState().auth.token;
+    if (savedToken === null) {
+      return thunkAPI.rejectWithValue("token is not exist");
+    }
+
+    setAuthHeader(savedToken);
+    try {
+      const { data } = await goitApi.get("/users/current");
+
+      return data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message);
+    }
+  }
+);
