@@ -37,8 +37,8 @@ const authSlices = createSlice({
         return initialState;
       })
       .addCase(refreshUserThunk.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.email = action.payload.email;
+        state.user = action.payload;
+
         state.isLoggedIn = true;
         state.isRefreshing = false;
       })
