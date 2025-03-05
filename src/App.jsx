@@ -10,6 +10,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { refreshUserThunk } from "./redux/auth/operations";
 import { selectIsRefreshing } from "./redux/auth/selectors";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+
+import RestrictedRoute from "./components/RestrictedRoute/RestrictedRoute";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -25,10 +28,31 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           {/* index означає, що HomePage буде рендеритися за замовчуванням при переході на /. */}
           <Route index element={<HomePage />} />
-          <Route path="/contacts" element={<ContactsPage />} />
+          <Route
+            path="/contacts"
+            element={
+              <PrivateRoute>
+                <ContactsPage />
+              </PrivateRoute>
+            }
+          />
         </Route>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/registration" element={<RegistrationPage />} />
+        <Route
+          path="/login"
+          element={
+            <RestrictedRoute>
+              <LoginPage />
+            </RestrictedRoute>
+          }
+        />
+        <Route
+          path="/registration"
+          element={
+            <RestrictedRoute>
+              <RegistrationPage />
+            </RestrictedRoute>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>

@@ -1,25 +1,25 @@
 import { Formik, Form, Field } from "formik";
 import s from "./LoginForm.module.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginThunk } from "../../redux/auth/operations";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const initialValues = { email: "", password: "" };
   const handleSubmit = (values, options) => {
-    dispatch(loginThunk(values))
-      .unwrap()
-      .then(() => {
-        navigate("/");
-      });
+    dispatch(loginThunk(values));
+    // .unwrap()
+    // .then(() => {
+    //   navigate("/");
+    // });
     options.resetForm();
   };
   return (
     <div className={s.loginBox}>
-      <p>Login</p>
+      <p className={s.paragraph}>Login</p>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <Form className={s.form}>
           <label className={s.inputSpan}>

@@ -57,7 +57,7 @@ p:first-child {
   background-color: cornsilk;
 }
 
-p:first-child {
+.paragraph {
   color: #58bc82;
   margin: 0 0 30px;
   padding: 0;

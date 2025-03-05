@@ -20,7 +20,7 @@ const RegistrationForm = () => {
   };
   return (
     <div className={s.loginBox}>
-      <p>Register</p>
+      <p className={s.paragraph}>Register</p>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <Form className={s.form}>
           <label className={s.inputSpan}>
