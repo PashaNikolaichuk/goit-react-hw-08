@@ -32,6 +32,7 @@ const ContactForm = () => {
           name: values.name,
           number: values.number,
         };
+
         dispatch(addContact(newContact));
         options.resetForm();
       }}

@@ -1,10 +1,11 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { fetchContacts, addContact, deleteContact } from "./operations";
+import { logOutThunk } from "../auth/operations";
 
 // 1. Оголошуєм початкове значення стану Redux
 const initialState = {
-  tasks: {
-    item: [],
+  contacts: {
+    items: [],
     loading: false,
     error: null,
   },
@@ -24,24 +25,27 @@ const contactsSlices = createSlice({
       .addCase(fetchContacts.fulfilled, (state, action) => {
         //  action.payload потрапляє наша data
         //замість пустого масиву записуєм те шо прийшло з data
-        state.tasks.item = action.payload;
-        state.tasks.loading = false;
-        state.tasks.error = null;
+        state.contacts.items = action.payload;
+        state.contacts.loading = false;
+        state.contacts.error = null;
       })
 
       // addTask
       .addCase(addContact.fulfilled, (state, action) => {
-        state.tasks.loading = false;
-        state.tasks.error = null;
-        state.tasks.item.push(action.payload);
+        state.contacts.loading = false;
+        state.contacts.error = null;
+        state.contacts.items.push(action.payload);
       })
 
       // deleteContact
       .addCase(deleteContact.fulfilled, (state, action) => {
-        state.tasks.item = state.tasks.item.filter(
+        state.contacts.items = state.contacts.items.filter(
           (item) => item.id !== action.payload
         );
-        state.tasks.loading = false;
+        state.contacts.loading = false;
+      })
+      .addCase(logOutThunk.fulfilled, (state) => {
+        state.contacts.items = [];
       })
       .addMatcher(
         isAnyOf(
@@ -50,10 +54,11 @@ const contactsSlices = createSlice({
           deleteContact.pending
         ),
         (state) => {
-          state.tasks.loading = true;
-          state.tasks.error = null;
+          state.contacts.loading = true;
+          state.contacts.error = null;
         }
       )
+
       .addMatcher(
         isAnyOf(
           fetchContacts.rejected,
@@ -61,14 +66,12 @@ const contactsSlices = createSlice({
           deleteContact.rejected
         ),
         (state, action) => {
-          state.tasks.error = action.payload;
-          state.tasks.loading = false;
+          state.contacts.error = action.payload;
+          state.contacts.loading = false;
         }
       );
   },
 });
 
 // contactsSlices.reducer: Основний reducer, який потрібно передати в store.
-export const tasksReducer = contactsSlices.reducer;
-export const { setLoading, setError, fetchDataSuccess } =
-  contactsSlices.actions;
+export const contactsReducer = contactsSlices.reducer;

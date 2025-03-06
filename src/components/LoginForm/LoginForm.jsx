@@ -11,10 +11,6 @@ const LoginForm = () => {
   const initialValues = { email: "", password: "" };
   const handleSubmit = (values, options) => {
     dispatch(loginThunk(values));
-    // .unwrap()
-    // .then(() => {
-    //   navigate("/");
-    // });
     options.resetForm();
   };
   return (

@@ -30,20 +30,12 @@ const App = () => {
           <Route index element={<HomePage />} />
           <Route
             path="/contacts"
-            element={
-              <PrivateRoute>
-                <ContactsPage />
-              </PrivateRoute>
-            }
+            element={<PrivateRoute component={ContactsPage} />}
           />
         </Route>
         <Route
           path="/login"
-          element={
-            <RestrictedRoute>
-              <LoginPage />
-            </RestrictedRoute>
-          }
+          element={<RestrictedRoute component={LoginPage} />}
         />
         <Route
           path="/registration"
