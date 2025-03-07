@@ -18,16 +18,18 @@ export const registerThunk = createAsyncThunk(
   "auth/register",
   async (credentials, thunkAPI) => {
     try {
-      console.log("Відправка даних:", credentials);
       const { data } = await goitApi.post("/users/signup", credentials);
+
       setAuthHeader(data.token);
+      toast.success("Реєстрація успішна!");
       return data;
     } catch (error) {
-      if (error.response.data.code === 11000) {
-        toast.error("user alredy exist!");
-        thunkAPI.rejectWithValue(error.message);
+      if (error.response && error.response.status === 400) {
+        toast.error("Такий користувач вже існує!");
+        return thunkAPI.rejectWithValue("Такий користувач вже існує!");
       }
 
+      toast.error("Сталася помилка. Спробуйте ще раз!");
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -39,8 +41,10 @@ export const loginThunk = createAsyncThunk(
     try {
       const { data } = await goitApi.post("/users/login", credentials);
       setAuthHeader(data.token);
+      toast.success("Вхід успішний)");
       return data;
     } catch (e) {
+      toast.error("Неправильний email або пароль!");
       return thunkAPI.rejectWithValue(e.message);
     }
   }
@@ -52,7 +56,9 @@ export const logOutThunk = createAsyncThunk(
     try {
       await goitApi.post("/users/logout");
       clearAuthHeader();
+      toast.success("Ви вийшли з акаунту!");
     } catch (e) {
+      toast.error("Помилка виходу! Спробуйте ще раз.");
       return thunkAPI.rejectWithValue(e.message);
     }
   }

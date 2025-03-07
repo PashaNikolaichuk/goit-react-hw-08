@@ -11,7 +11,8 @@ import { useEffect } from "react";
 import { refreshUserThunk } from "./redux/auth/operations";
 import { selectIsRefreshing } from "./redux/auth/selectors";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import RestrictedRoute from "./components/RestrictedRoute/RestrictedRoute";
 
 const App = () => {
@@ -24,6 +25,7 @@ const App = () => {
   // якщо true повертає null як false сторінки
   return isRefreshing ? null : (
     <div className={s.container}>
+      <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         <Route path="/" element={<Layout />}>
           {/* index означає, що HomePage буде рендеритися за замовчуванням при переході на /. */}
@@ -39,11 +41,7 @@ const App = () => {
         />
         <Route
           path="/registration"
-          element={
-            <RestrictedRoute>
-              <RegistrationPage />
-            </RestrictedRoute>
-          }
+          element={<RestrictedRoute component={RegistrationPage} />}
         />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
